@@ -23,8 +23,5 @@
 			"./Enable.php"
 		]
 	},
-	"config" : {
-		"vendor-dir" : "MTM/Async"
-	},
 	"minimum-stability" : "dev"
 }
