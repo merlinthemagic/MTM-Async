@@ -1,5 +1,5 @@
 {
-	"name" : "merlinthemagic/async",
+	"name" : "merlinthemagic/mtm-async",
 	"type" : "library",
 	"description" : "Async tools for PHP 7",
 	"keywords" : [
