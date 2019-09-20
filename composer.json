@@ -1,0 +1,21 @@
+{
+    "config": {
+        "vendor-dir": "MTM"
+    },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "Async",
+                "version": "0.0.1",
+                "dist": {
+                    "url": "http://plugins.symfony-project.org/get/sfGuardPlugin/sfGuardPlugin-4.0.2.tgz",
+                    "type": "tar"
+                }
+            }
+        }
+    ],
+    "require": {
+        "sfGuardPlugin": "4.0.*"
+    }
+}
