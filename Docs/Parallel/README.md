@@ -10,15 +10,15 @@ Paralle is a new project, documentation has not yet been written. I learn best b
 
 You must use >=PHP 7.3 with ZTS from build. If you just wanna test, i have included RPMs for CentOS7 in the "Prebuilds" folder. Otherwise, you can checkout from remi.
 
-To use MTM and Parallel add the following to your script:
+To use MTM and Parallel:
 
 ```
-require_once("/some/path/to/MTM/Async/Enable.php");
+composer require merlinthemagic/mtm-async
 
 ```
 
-You will need to create a bootstrap file for kick starting a thread.
-Most likely the bootstrap file will need to autoload your classes and it MUST include the "require_once" statement above.
+You will need to create a bootstrap file for kick starting a new thread.
+The bootstrap file will need to autoload your classes and it MUST include merlinthemagic/mtm-async 
 
 
 ## Using the Parallel wrapper:
@@ -28,7 +28,7 @@ Most likely the bootstrap file will need to autoload your classes and it MUST in
 
 ```
 $myBootStrapFile	= "/some/path/to/your/bootstrap/file.php"; //string. Path to your boot strap file
-$entryClass		= "\my\class\path\OR\an\object"; //string or object
+$entryClass		= "\my\class\path\OR\an\object"; //string or object (instance of the class)
 $entryMethod		= "myMethodName"; //string
 $entryArgs		= array("arg1", "arg2"); //array
 
