@@ -10,7 +10,7 @@ Paralle is a new project, documentation has not yet been written. I learn best b
 
 You must use >=PHP 7.3 with ZTS from build. If you just wanna test, i have included RPMs for CentOS7 in the "Prebuilds" folder. Otherwise, you can checkout from remi.
 
-To use MTM and Parallel:
+To use MTM-Async and Parallel:
 
 ```
 composer require merlinthemagic/mtm-async
@@ -54,16 +54,14 @@ The above example will kick off a new thread.
 ```
 //getValue is blocking so you can wrap in if statement to avoid blocking in main
 if ($threadObj->getFuture()->isDone() === true) {
-	return $threadObj->getFuture()->getValue();
-} else {
-	return null;
+	$result $threadObj->getFuture()->getValue();
 }
 ```
 
 ### Create a channel:
 
 ```
-$name		= "myUniqueChannel"; 
+$name		= "myUniqueChannelName"; 
 $size		= -1; //-1 == grow as you like, > 0 limit size to X bytes
 $chanObj	= \MTM\Async\Factories::getThreading()->getParallel()->getNewChannel($name, $size);
 ```
@@ -83,8 +81,10 @@ $data		= $chanObj->getData($data); //this is blocking!
 
 ```
 $eventLoopObj		= \MTM\Async\Factories::getThreading()->getParallel()->getNewEventLoop();
+
 //add a channel to receive messages from this event loop
 $eventLoopObj->addTarget($chanObj1);
+
 //add another channel to receive messages from this event loop
 $eventLoopObj->addTarget($chanObj2);
 ```
@@ -105,12 +105,12 @@ $data		= $chanObj->getData($data); //this is blocking!
 ##### Notes:
 
 There is a channel dedicated to management for each Thread, you can use it to communicate with each thread directly.
-This is not a Parallel requirement, but it allows direct communication to the thread if needed, I use it to pass management data to workers outside the event loops.
+This is not a Parallel requirement, but i found it useful in sending new jobs to a thread. 
 
 Main sending to Thread:
 
 ```
-$data		= "Information i need to give thread";
+$data		= "Information about a new job i want to give directly to a specific thread";
 $chanObj	= $threadObj->getChannel();
 $chanObj->setData($data);
 ```
