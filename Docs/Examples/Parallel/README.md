@@ -2,7 +2,7 @@
 
 Wrapper for this project: https://github.com/krakjoe/parallel
 
-## Why:
+## What is this?:
 
 Paralle is a new project, documentation has not yet been written. I learn best by wrapping someone elses work and making it flow the way i see the world. That said, i am very green in using this lib and as a result my understanding may be lacking. Some of the relationships i have created between objects might not reflect the authors intent.   
 
@@ -17,14 +17,26 @@ composer require merlinthemagic/mtm-async
 
 ```
 
-You will need to create a bootstrap file for kick starting a new thread.
-The bootstrap file will need to autoload your classes and it MUST include merlinthemagic/mtm-async 
+### Example:
 
+```
+//look at the source of Main and Thread classes.
+$mainObj	= new \MTM\Async\Docs\Examples\Parallel\Simple\Main();
+		
+$mainObj->successThread(); //echos array of result from thread
+$mainObj->errorThread(); //echos exception message thrown from thread
+
+
+```
 
 ## Using the Parallel wrapper:
 
 ### Start a thread:
 
+#### Main tread code:
+
+You will need to create a bootstrap file for kick starting a new thread.
+The bootstrap file will need to autoload your classes and it MUST include merlinthemagic/mtm-async and its dependency
 
 ```
 $myBootStrapFile	= "/some/path/to/your/bootstrap/file.php"; //string. Path to your boot strap file
@@ -37,7 +49,7 @@ $threadObj->initByClassMethod($entryClass, $entryMethod, $entryArgs);
 			
 ```
 
-Explanation:
+#### Explanation:
 
 The above example will kick off a new thread.
 
@@ -50,6 +62,9 @@ The above example will kick off a new thread.
 4) Your program is running.
 
 5) When the thread completes you can pickup the return by calling:
+
+
+### Get return from a thread:
 
 ```
 //getValue is blocking so you can wrap in if statement to avoid blocking in main
