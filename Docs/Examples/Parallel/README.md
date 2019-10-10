@@ -106,7 +106,7 @@ $eventLoopObj->addTarget($chanObj2);
 
 ```
 $data		= "Information to all receivers on the event loop";
-$eventLoopObj->sendInput($data);
+$eventLoopObj->sendData($data);
 ```
 
 #### Receive data from event loop (always the same for a channel):

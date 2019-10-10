@@ -9,6 +9,27 @@ class EventLoop extends Base
 	protected $_targetObjs=array();
 	protected $_eventObjs=array();
 	
+	public function sendData($data)
+	{
+		//will send data to all channel targets from this event loop
+		if ($data !== null) {
+			$evObj	= $this->getParent()->getNewInputEvent($data);
+			foreach ($this->getTargets() as $tObj) {
+				if ($tObj instanceof \MTM\Async\Models\Threading\Parallel\Channel === true) {
+					$evObj->addTarget($tObj);
+				}
+			}
+			if (count($evObj->getTargets()) > 0) {
+				$this->setInput($evObj);
+			} else {
+				//there are no channels on this event loop
+			}
+			return $this;
+			
+		} else {
+			throw new \Exception("Data cannot be null");
+		}
+	}
 	public function poll()
 	{
 		$rawObj	= $this->get()->poll();
@@ -62,27 +83,6 @@ class EventLoop extends Base
 			}
 		}
 		return $this;
-	}
-	public function sendInput($data)
-	{
-		//will send data to all channel targets from this event loop
-		if ($data !== null) {
-			$evObj	= $this->getParent()->getNewInputEvent($data);
-			foreach ($this->getTargets() as $tObj) {
-				if ($tObj instanceof \MTM\Async\Models\Threading\Parallel\Channel === true) {
-					$evObj->addTarget($tObj);
-				}
-			}
-			if (count($evObj->getTargets()) > 0) {
-				$this->setInput($evObj);
-			} else {
-				//there are no channels on this event loop
-			}
-			return $this;
-			
-		} else {
-			throw new \Exception("Data cannot be null");
-		}
 	}
 	public function setInput($evObj)
 	{
