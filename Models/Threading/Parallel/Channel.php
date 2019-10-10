@@ -11,11 +11,12 @@ class Channel extends Base
 	
 	public function getData()
 	{
-		return $this->get()->recv();
+		return $this->getRaw()->recv();
 	}
 	public function setData($data)
 	{
-		return $this->get()->send($data);
+		$this->getRaw()->send($data);
+		return $this;
 	}
 	public function setName($name)
 	{
@@ -55,7 +56,7 @@ class Channel extends Base
 	{
 		return $this->_size;
 	}
-	public function get()
+	public function getRaw()
 	{
 		if ($this->_rawObj === null) {
 			
@@ -68,11 +69,11 @@ class Channel extends Base
 				$size	= -1;
 			}
 			$cFact	= new \parallel\Channel();
-			$this->set($cFact->make($name, $size));
+			$this->setRaw($cFact->make($name, $size));
 		}
 		return $this->_rawObj;
 	}
-	public function set($obj)
+	public function setRaw($obj)
 	{
 		if ($this->_rawObj === null) {
 			$this->_rawObj		= $obj;

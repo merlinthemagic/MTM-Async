@@ -61,15 +61,13 @@ The above example will kick off a new thread.
 
 4) Your program is running.
 
-5) When the thread completes you can pickup the return by calling:
-
 
 ### Get return from a thread:
 
 ```
 //getValue is blocking so you can wrap in if statement to avoid blocking in main
 if ($threadObj->getFuture()->isDone() === true) {
-	$result $threadObj->getFuture()->getValue();
+	$result = $threadObj->getFuture()->getValue();
 }
 ```
 
@@ -89,7 +87,7 @@ $chanObj->setData($data);
 
 #### Receive on Channel:
 ```
-$data		= $chanObj->getData($data); //this is blocking!
+$data		= $chanObj->getData(); //this is blocking!
 ```
 
 ### Create Event loop:

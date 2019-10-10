@@ -78,7 +78,7 @@ class Thread extends Base
 						}
 					}
 					$pFact		= \MTM\Async\Factories::getThreading()->getParallel();
-					$chanObj	= $pFact->getNewChannel($name, $size)->set($rawObj);
+					$chanObj	= $pFact->getNewChannel($name, $size)->setRaw($rawObj);
 					$pFact->setTreadCtrl($chanObj);
 
 					$initObj	= $chanObj->getData();

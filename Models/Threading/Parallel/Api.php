@@ -8,6 +8,7 @@ class Api extends Base
 	protected $_threadObjs=array();
 	protected $_channelObjs=array();
 	protected $_eventLoopObjs=array();
+	protected $_syncObjs=array();
 
 	public function getNewThread($bootStrap=null)
 	{
@@ -45,15 +46,12 @@ class Api extends Base
 		$rObj->setParent($this);
 		return $rObj;
 	}
-	public function getEventTypeById($id)
+	public function getNewSync()
 	{
-		$sId	= __FUNCTION__ . $id;
-		if (array_key_exists($sId, $this->_cStore) === false) {
-			$rObj	= new \MTM\Async\Models\Threading\Parallel\EventType($id);
-			$rObj->setParent($this);
-			$this->_cStore[$sId]	= $rObj;
-		}
-		return $this->_cStore[$sId];
+		$rObj	= new \MTM\Async\Models\Threading\Parallel\Sync();
+		$rObj->setParent($this);
+		$this->_syncObjs[$rObj->getGuid()]	= $rObj;
+		return $rObj;
 	}
 	public function getThreads()
 	{
@@ -62,6 +60,10 @@ class Api extends Base
 	public function getChannels()
 	{
 		return array_values($this->_channelObjs);
+	}
+	public function getSyncs()
+	{
+		return array_values($this->_syncObjs);
 	}
 	public function getChannelByName($name, $throw=false)
 	{
@@ -76,6 +78,37 @@ class Api extends Base
 			throw new \Exception("Channel: " . $name . ", does not exist");
 		}
 	}
+	public function getSyncById($id, $onlyOne=false, $throw=false)
+	{
+		$rObjs	= array();
+		foreach ($this->getSyncs() as $eObj) {
+			if ($eObj->getId() == $id) {
+				$rObjs[]	= $eObj;
+			}
+		}
+		
+		if (count($rObjs) > 0) {
+			if ($onlyOne === false) {
+				return $rObjs;
+			} else {
+				return reset($rObjs);
+			}
+		} elseif ($throw === false) {
+			return null;
+		} else {
+			throw new \Exception("Sync: " . $id . ", does not exist");
+		}
+	}
+	public function getEventTypeById($id)
+	{
+		$sId	= __FUNCTION__ . $id;
+		if (array_key_exists($sId, $this->_cStore) === false) {
+			$rObj	= new \MTM\Async\Models\Threading\Parallel\EventType($id);
+			$rObj->setParent($this);
+			$this->_cStore[$sId]	= $rObj;
+		}
+		return $this->_cStore[$sId];
+	}
 	public function removeThread($threadObj)
 	{
 		if (array_key_exists($threadObj->getGuid(), $this->_threadObjs) === true) {
@@ -89,6 +122,14 @@ class Api extends Base
 		if (array_key_exists($channelObj->getGuid(), $this->_channelObjs) === true) {
 			unset($this->_channelObjs[$channelObj->getGuid()]);
 			$channelObj->terminate();
+		}
+		return $this;
+	}
+	public function removeSync($syncObj)
+	{
+		if (array_key_exists($syncObj->getGuid(), $this->_syncObjs) === true) {
+			unset($this->_syncObjs[$syncObj->getGuid()]);
+			$syncObj->terminate();
 		}
 		return $this;
 	}
