@@ -156,7 +156,6 @@ class Api extends Base
 				} catch (\Exception $e) {
 				}
 			}
-			
 			foreach ($this->getChannels() as $eObj) {
 				try {
 					$this->removeChannel($eObj);

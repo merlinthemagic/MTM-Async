@@ -112,7 +112,7 @@ class Thread extends Base
 					return new \Exception("MTM-Async must be Enable by the boot strap");
 				}
 
-			}, array($this->getChannel()->get())));
+			}, array($this->getChannel()->getRaw())));
 			
 			$this->_initTime	= \MTM\Utilities\Factories::getTime()->getMicroEpoch(true);
 		}
