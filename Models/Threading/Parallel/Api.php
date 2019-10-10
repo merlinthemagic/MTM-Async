@@ -61,6 +61,10 @@ class Api extends Base
 	{
 		return array_values($this->_channelObjs);
 	}
+	public function getEventLoops()
+	{
+		return array_values($this->_eventLoopObjs);
+	}
 	public function getSyncs()
 	{
 		return array_values($this->_syncObjs);
@@ -125,14 +129,6 @@ class Api extends Base
 		}
 		return $this;
 	}
-	public function removeSync($syncObj)
-	{
-		if (array_key_exists($syncObj->getGuid(), $this->_syncObjs) === true) {
-			unset($this->_syncObjs[$syncObj->getGuid()]);
-			$syncObj->terminate();
-		}
-		return $this;
-	}
 	public function removeEventLoop($evLoopObj)
 	{
 		if (array_key_exists($evLoopObj->getGuid(), $this->_eventLoopObjs) === true) {
@@ -141,21 +137,41 @@ class Api extends Base
 		}
 		return $this;
 	}
+	public function removeSync($syncObj)
+	{
+		if (array_key_exists($syncObj->getGuid(), $this->_syncObjs) === true) {
+			unset($this->_syncObjs[$syncObj->getGuid()]);
+			$syncObj->terminate();
+		}
+		return $this;
+	}
 	public function terminate()
 	{
 		if ($this->getTerminationStatus() === false) {
 			$this->_termStatus	= true;
 			
-			foreach ($this->getThreads() as $thObj) {
+			foreach ($this->getThreads() as $eObj) {
 				try {
-					$this->removeThread($thObj);
+					$this->removeThread($eObj);
 				} catch (\Exception $e) {
 				}
 			}
 			
-			foreach ($this->getChannels() as $chObj) {
+			foreach ($this->getChannels() as $eObj) {
 				try {
-					$this->removeChannel($chObj);
+					$this->removeChannel($eObj);
+				} catch (\Exception $e) {
+				}
+			}
+			foreach ($this->getEventLoops() as $eObj) {
+				try {
+					$this->removeEventLoop($eObj);
+				} catch (\Exception $e) {
+				}
+			}
+			foreach ($this->getSyncs() as $eObj) {
+				try {
+					$this->removeSync($eObj);
 				} catch (\Exception $e) {
 				}
 			}
@@ -163,12 +179,13 @@ class Api extends Base
 	}
 	public function setTreadCtrl($channelObj)
 	{
-		//control channel for a spawned thread
+		//this sets the control channel for a spawned thread
 		$this->_ctrlChanObj		= $channelObj;
 		return $this;
 	}
 	public function getTreadCtrl()
 	{
+		//this gets the control channel for a spawned thread
 		return $this->_ctrlChanObj;
 	}
 }
