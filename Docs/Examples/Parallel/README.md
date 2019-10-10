@@ -112,7 +112,7 @@ $eventLoopObj->sendData($data);
 #### Receive data from event loop (always the same for a channel):
 
 ```
-$data		= $chanObj->getData($data); //this is blocking!
+$data		= $chanObj->getData(); //this is blocking!
 ```
 
 ##### Notes:
