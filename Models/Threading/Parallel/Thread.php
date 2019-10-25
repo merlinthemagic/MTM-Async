@@ -56,6 +56,16 @@ class Thread extends Base
 		}
 		return $this->_channelObj;
 	}
+	public function kill()
+	{
+		if (
+			$this->getFuture() !== null
+			&& $this->getFuture()->isDone() === false
+			&& $this->get()->kill() === false
+		) {
+			throw new \Exception("Failed to kill");
+		}
+	}
 	public function get()
 	{
 		if ($this->_threadObj === null) {

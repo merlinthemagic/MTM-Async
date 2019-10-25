@@ -41,7 +41,6 @@ abstract class Base
 		}
 		return $this;
 	}
-
 	public function call()
 	{
 		if ($this->_callCb !== null) {
@@ -58,7 +57,7 @@ abstract class Base
 	}
 	public function subscribe()
 	{
-		//allows resubscribe 
+		//allows resubscribe
 		$this->getParent()->addSubscription($this);
 		return $this;
 	}

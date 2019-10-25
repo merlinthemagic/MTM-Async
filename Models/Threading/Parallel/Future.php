@@ -42,6 +42,13 @@ class Future extends Base
 		//was the thread cancelled?
 		return $this->get()->cancelled();
 	}
+	public function cancel()
+	{
+		if ($this->isCancelled() === false && $this->get()->cancel() === false) {
+			throw new \Exception("Failed to cancel");
+		}
+		return $this;
+	}
 	public function terminate()
 	{
 		if ($this->getTerminationStatus() === false) {
