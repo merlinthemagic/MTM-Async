@@ -11,9 +11,12 @@ class Thread extends Base
 	protected $_futureObj=null;
 	protected $_bootStrap=null;
 	
-	public function setBootStrap($file)
+	public function setBootStrap($filepath)
 	{
-		$this->_bootStrap	= $file;
+		if ($filepath !== null && file_exists($filepath) === false) {
+			return new \Exception("Boot strap file does not exist");
+		}
+		$this->_bootStrap	= $filepath;
 		return $this;
 	}
 	public function getBootStrap()

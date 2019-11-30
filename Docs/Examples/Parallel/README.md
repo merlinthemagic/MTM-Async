@@ -10,6 +10,13 @@ Paralle is a new project, documentation has not yet been written. I learn best b
 
 You must use >=PHP 7.3 with ZTS from build. If you just wanna test, i have included RPMs for CentOS7 in the "Prebuilds" folder. Otherwise, you can checkout from remi.
 
+To enable parallel install the RPM and add parallel.so as a dynamic extension in php.ini
+
+```
+extension=/usr/lib/php/extensions/no-debug-zts-20180731/parallel.so
+```
+
+
 To use MTM-Async and Parallel:
 
 ```

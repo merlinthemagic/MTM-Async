@@ -11,6 +11,8 @@ class Threading extends Base
 				$rObj	= new \MTM\Async\Models\Threading\Parallel\Api();
 				$this->_cStore[__FUNCTION__]	= $rObj;
 			} else {
+				//is the extension added under php.ini?
+				//extension=/usr/lib/php/extensions/no-debug-zts-20180731/parallel.so
 				throw new \Exception("Parallel extension not loaded");
 			}
 		}
