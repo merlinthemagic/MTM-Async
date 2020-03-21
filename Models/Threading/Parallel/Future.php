@@ -44,7 +44,11 @@ class Future extends Base
 	}
 	public function cancel()
 	{
-		if ($this->isCancelled() === false && $this->get()->cancel() === false) {
+		if (
+			$this->isDone() === false 
+			&& $this->isCancelled() === false
+			&& $this->get()->cancel() === false
+		) {
 			throw new \Exception("Failed to cancel");
 		}
 		return $this;
