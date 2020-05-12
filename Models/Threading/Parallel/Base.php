@@ -6,7 +6,7 @@ class Base
 {
 	protected $_cStore=array();
 	protected $_guid=null;
-	protected $_termStatus=null;
+	protected $_termStatus=false;
 	protected $_parentObj=null;
 	
 	public function __destruct()

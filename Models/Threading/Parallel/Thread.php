@@ -6,6 +6,7 @@ class Thread extends Base
 {
 	protected $_initEntry=false;
 	protected $_initTime=null;
+	protected $_isClosed=false;
 	protected $_threadObj=null;
 	protected $_channelObj=null;
 	protected $_futureObj=null;
@@ -61,6 +62,7 @@ class Thread extends Base
 	}
 	public function kill()
 	{
+		//runtime join
 		if (
 			$this->getFuture() !== null
 			&& $this->getFuture()->isDone() === false
@@ -68,6 +70,16 @@ class Thread extends Base
 		) {
 			throw new \Exception("Failed to kill");
 		}
+		return $this;
+	}
+	public function close()
+	{
+		//graceful runtime join
+		if ($this->_initTime !== null && $this->_isClosed === false) {
+			$this->get()->close();
+			$this->_isClosed	= true;
+		}
+		return $this;
 	}
 	public function get()
 	{
@@ -104,7 +116,9 @@ class Thread extends Base
 							if (class_exists($initObj->class) === true) {
 								$obj = new $initObj->class();
 								if (method_exists($obj, $initObj->method) === true) {
-									return call_user_func_array(array($obj, $initObj->method), $initObj->args);
+									$rData	= call_user_func_array(array($obj, $initObj->method), $initObj->args);
+									$pFact->setTreadCtrl(null);
+									return $rData;
 								} else {
 									return new \Exception("Method: " .$initObj->method. ", does not exist on class: " . $initObj->class);
 								}
@@ -143,7 +157,8 @@ class Thread extends Base
 					}
 				}
 			}
-			$this->getParent()->removeChannel($this);
+			$this->close();
+			$this->getParent()->removeThread($this);
 			$this->getChannel()->terminate();
 			parent::terminate();
 		}
