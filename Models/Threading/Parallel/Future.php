@@ -25,7 +25,7 @@ class Future extends Base
 	public function getValue()
 	{
 		try {
-			//return value from thread, wait
+			//return value from thread, blocking
 			return $this->get()->value();
 			
 		} catch (\parallel\Future\Error\Killed $e) {
@@ -44,12 +44,22 @@ class Future extends Base
 	}
 	public function cancel()
 	{
-		if (
-			$this->isDone() === false 
-			&& $this->isCancelled() === false
-			&& $this->get()->cancel() === false
-		) {
-			throw new \Exception("Failed to cancel");
+		try {
+			
+			if (
+				$this->isDone() === false
+				&& $this->isCancelled() === false
+				&& $this->get()->cancel() === false
+			) {
+				throw new \Exception("Failed to cancel");
+			}
+
+		} catch (\parallel\Future\Error\Cancelled $e) {
+			throw new \Exception("Thread was cancelled: " . $e->getMessage(), $e->getCode());
+		} catch (\parallel\Future\Error\Killed $e) {
+			throw new \Exception("Thread was killed: " . $e->getMessage(), $e->getCode());
+		} catch (\Exception $e) {
+			throw $e;
 		}
 		return $this;
 	}

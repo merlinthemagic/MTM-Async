@@ -148,19 +148,22 @@ class Thread extends Base
 	public function terminate()
 	{
 		if ($this->getTerminationStatus() === false) {
-			$this->_termStatus	= true;
-			if ($this->_initTime !== null) {
-				if ($this->getFuture()->isDone() === false) {
-					$isValid	= $this->getFuture()->get()->cancel();
-					if ($isValid === false) {
-						//something went wrong, but we may be shutting down dont throw
-					}
+			
+			try {
+				$this->_termStatus	= true;
+				if ($this->_initTime !== null) {
+					$this->getFuture()->cancel();
 				}
+				
+				$this->close();
+				$this->getParent()->removeThread($this);
+				$this->getChannel()->terminate();
+				parent::terminate();
+				
+			} catch (\Exception $e) {
+				parent::terminate();
+				throw $e;
 			}
-			$this->close();
-			$this->getParent()->removeThread($this);
-			$this->getChannel()->terminate();
-			parent::terminate();
 		}
 	}
 }
