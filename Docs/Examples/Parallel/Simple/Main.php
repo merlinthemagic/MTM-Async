@@ -29,7 +29,5 @@ class Main
 		} catch (\Exception $e) {
 			echo "Thread threw error: " . $e->getMessage();
 		}
-		
 	}
-	
 }
