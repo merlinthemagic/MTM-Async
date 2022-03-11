@@ -7,13 +7,13 @@ class Services extends Base
 	public function getLoop()
 	{
 		//simple loop
-		if (array_key_exists(__FUNCTION__, $this->_cStore) === false) {
+		if (array_key_exists(__FUNCTION__, $this->_s) === false) {
 			$rObj	= new \MTM\Async\Models\Services\Loop();
 			//override the error call back on return
 			$rObj->setErrorCallback($this, "defaultErrorCatch");
-			$this->_cStore[__FUNCTION__]	= $rObj;
+			$this->_s[__FUNCTION__]	= $rObj;
 		}
-		return $this->_cStore[__FUNCTION__];
+		return $this->_s[__FUNCTION__];
 	}
 	public function defaultErrorCatch($subObj, $e)
 	{
