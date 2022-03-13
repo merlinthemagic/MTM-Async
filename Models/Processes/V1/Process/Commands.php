@@ -24,9 +24,9 @@ abstract class Commands extends Base
 			return false;
 		}
 	}
-	public function getReturn($throw=true, $timeoutMs=-1)
+	public function getReturn($timeoutMs=-1, $throw=true)
 	{
-		if ($this->isRunning() === false && $this->_isDone === false) {
+		if ($this->_isDone === false) {
 			
 			$timeFact	= \MTM\Utilities\Factories::getTime();
 			$tTime		= ($timeFact->getMicroEpoch() + ($timeoutMs / 1000));
