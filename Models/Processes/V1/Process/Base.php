@@ -4,16 +4,35 @@ namespace MTM\Async\Models\Processes\V1\Process;
 
 abstract class Base
 {
+	protected $_isInit=false;
+	protected $_isTerm=false;
 	protected $_guid=null;
 	protected $_apiObj=null;
 	protected $_filePath=null;
 	protected $_className=null;
 	protected $_methodName=null;
 	protected $_args=array();
+	protected $_persist=false;
+	protected $_procGuid=null;
 	
 	public function __construct()
 	{
-		$this->_guid	= \MTM\Utilities\Factories::getGuids()->getV4()->get(false);
+		register_shutdown_function(array($this, "__destruct"));
+	}
+	public function __destruct()
+	{
+		$this->terminate();
+	}
+	public function setGuid($guid)
+	{
+		//set to pick up an existing process
+		if (is_string($guid) === false) {
+			throw new \Exception("Guid must be string");
+		} elseif ($this->_isInit !== false) {
+			throw new \Exception("Guid cannot be set on a process that has initialized");
+		}
+		$this->_guid	= $guid;
+		return $this;
 	}
 	public function getGuid()
 	{
@@ -63,5 +82,17 @@ abstract class Base
 	public function getArguments()
 	{
 		return $this->_args;
+	}
+	public function setPersistence($bool)
+	{
+		if (is_bool($bool) === false) {
+			throw new \Exception("Persistance must be boolean");
+		}
+		$this->_persist	= $bool;
+		return $this;
+	}
+	public function getPersistence()
+	{
+		return $this->_persist;
 	}
 }
