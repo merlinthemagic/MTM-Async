@@ -63,7 +63,7 @@ try {
 	if (file_exists($argObj->procFile) === true) {
 		file_put_contents($argObj->procFile, "launching:|MTM|:".base64_encode(serialize(getmypid()))."\n", FILE_APPEND);
 	}
-	
+
 	$rData	= call_user_func(array($argObj->class, $argObj->method), $argObj->args);
 	
 	if (file_exists($argObj->procFile) === true) {

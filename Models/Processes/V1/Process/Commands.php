@@ -24,20 +24,29 @@ abstract class Commands extends Base
 			return false;
 		}
 	}
-	public function getReturn($throw=true)
+	public function getReturn($throw=true, $timeoutMs=-1)
 	{
 		if ($this->isRunning() === false && $this->_isDone === false) {
-			$data	= $this->readData("exception");
-			if ($data === null) {
-				$data	= $this->readData("return");
-				if ($data !== null) {
-					$this->_data	= $data;
+			
+			$timeFact	= \MTM\Utilities\Factories::getTime();
+			$tTime		= ($timeFact->getMicroEpoch() + ($timeoutMs / 1000));
+			while ($this->_isDone === false) {
+				$data	= $this->readData("exception");
+				if ($data === null) {
+					$data	= $this->readData("return");
+					if ($data !== null) {
+						$this->_data	= $data;
+						$this->_isDone	= true;
+					} elseif ($timeFact->getMicroEpoch() > $tTime) {
+						break;
+					} else {
+						usleep(100000);
+					}
+				} else {
+					$this->_data	= $data["trace"];
+					$this->_ex		= new \Exception($data["message"], intval($data["code"]));
 					$this->_isDone	= true;
 				}
-			} else {
-				$this->_data	= $data["trace"];
-				$this->_ex		= new \Exception($data["message"], intval($data["code"]));
-				$this->_isDone	= true;
 			}
 		}
 		if ($this->_ex !== null && $throw === true) {
@@ -50,6 +59,8 @@ abstract class Commands extends Base
 	{
 		if ($this->_pFp === null) {
 			$this->_pFp		= fopen($this->_procFile, "r");
+		} else {
+			rewind($this->_pFp);
 		}
 		$find		= $type.":|MTM|:";
 		while(feof($this->_pFp) === false){

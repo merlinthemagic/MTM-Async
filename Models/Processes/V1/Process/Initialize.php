@@ -29,7 +29,7 @@ abstract class Initialize extends Commands
 				//pick up existing process
 				//$data	= $this->readData("setup"); //fill the object with this data
 				
-				throw new \Exception("NOt ready to pick up persistent processes yet");
+				throw new \Exception("Not ready to pick up persistent processes yet");
 			}
 			
 		} else {
@@ -70,33 +70,18 @@ abstract class Initialize extends Commands
 			throw new \Exception("Not handled for commands that exceed the shell max arg");
 		}
 		$shellObj->execute($strCmd1, "MtmAsyncOL");
-		
-		//find the pid of the process
-		$strCmd2	= "ps -ef | grep -v grep | grep ".$this->getGuid()." | awk '{ print $2 }'; echo -en \"MtmAsyncPid\"";
-		$tTime		= time() + 5;
-		while (true) {
-			$data		= $shellObj->execute($strCmd2, "MtmAsyncPid");
-			if (preg_match("/([0-9]+)/", $data, $raw) === 1) {
-				$this->_pId	= intval($raw[1]);
-				break;
-			} elseif ($tTime < time()) {
-				throw new \Exception("Failed to determine pid of child process");
-			} else {
-				usleep(100000);
-			}
-		}
+
 		$tTime		= time() + 5;
 		while (true) {
 			$data	= $this->readData("launching");
-			if (preg_match("/([0-9]+)/", $data, $raw) === 1) {
-				$pId	= intval($raw[1]);
-				if ($pId !== $this->_pId) {
-					throw new \Exception("Process launched with a different PId than we thought: ".$pId);
-				} else {
-					break;
-				}
+			if (preg_match("/^([0-9]+)$/", $data, $raw) === 1) {
+				$this->_pId	= intval($raw[1]);
+				break;
+			}
+			$data	= $this->readData("exception");
+			if ($data !== null) {
+				throw new \Exception($data["message"], intval($data["code"]));
 			} elseif ($tTime < time()) {
-				$this->getReturn(true);
 				throw new \Exception("Process failed to return launch data");
 			} else {
 				usleep(100000);
