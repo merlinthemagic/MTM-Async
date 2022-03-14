@@ -1,5 +1,6 @@
 <?php
 //© 2022 Martin Peter Madsen
+// file_put_contents("/dev/shm/merlinFFF.txt", "Start: " .getmypid()."\n", FILE_APPEND);
 try {
 	if (isset($argv[1]) === false) {
 		//we cannot report anything
@@ -55,23 +56,35 @@ try {
 	//args are serialized once more so we can load the boot strap before unpacking potential objects
 	$procData["args"]		= unserialize($procData["args"]);
 	if (is_array($procData["args"]) === false) {
-		throw new \Exception("Arguments must be in array", 39339);
+		throw new \Exception("Arguments must be in array", 39341);
 	} else {
 		$argObj->args		= $procData["args"];
 	}
+
+	$refObj 	= new \ReflectionMethod($argObj->class, $argObj->method);
+	if ($refObj->isPublic() === false) {
+		throw new \Exception("Class: '".$procData["class"]."' method: '".$procData["method"]."' is not public", 39339);
+	}
+	if ($refObj->getNumberOfRequiredParameters() > count($argObj->args)) {
+		throw new \Exception("Class: '".$procData["class"]."' method: '".$procData["method"]."' expects: '".$refObj->getNumberOfRequiredParameters()."' arguments, only: '".count($argObj->args)."' provided", 39340);
+	}
+
 	//tell the parent process we are launching
 	if (file_exists($argObj->procFile) === true) {
 		file_put_contents($argObj->procFile, "launching:|MTM|:".base64_encode(serialize(getmypid()))."\n", FILE_APPEND);
 	}
 
-	$rData	= call_user_func(array($argObj->class, $argObj->method), $argObj->args);
+// 	file_put_contents("/dev/shm/merlinFFF.txt", "Launch: " .getmypid()."\n", FILE_APPEND);
+	$rData	= call_user_func_array(array($argObj->class, $argObj->method), $argObj->args);
 	
 	if (file_exists($argObj->procFile) === true) {
-		file_put_contents($argObj->procFile, "return:|MTM|:".base64_encode(serialize($rData))."\n", FILE_APPEND);
+		file_put_contents($argObj->procFile, "return:|MTM|:".base64_encode(serialize((object) array("time" => time, "data" => $rData)))."\n", FILE_APPEND);
 	}
 
 } catch (\Exception $e) {
+	file_put_contents("/dev/shm/merlinFFF.txt", "Error: " .getmypid()." " .$e->getMessage() ."\n", FILE_APPEND);
 	if (file_exists($argObj->procFile) === true) {
 		file_put_contents($argObj->procFile, "exception:|MTM|:".base64_encode(serialize(array("message" => $e->getMessage(), "code" => $e->getCode(), "trace" => $e->getTraceAsString())))."\n", FILE_APPEND);
 	}
 }
+// file_put_contents("/dev/shm/merlinFFF.txt", "End: " .getmypid()."\n", FILE_APPEND);
