@@ -1,6 +1,5 @@
 <?php
 //© 2022 Martin Peter Madsen
-// file_put_contents("/dev/shm/merlinFFF.txt", "Start: " .getmypid()."\n", FILE_APPEND);
 try {
 	if (isset($argv[1]) === false) {
 		//we cannot report anything
@@ -73,8 +72,7 @@ try {
 	if (file_exists($argObj->procFile) === true) {
 		file_put_contents($argObj->procFile, "launching:|MTM|:".base64_encode(serialize(getmypid()))."\n", FILE_APPEND);
 	}
-
-// 	file_put_contents("/dev/shm/merlinFFF.txt", "Launch: " .getmypid()."\n", FILE_APPEND);
+	
 	$rData	= call_user_func_array(array($argObj->class, $argObj->method), $argObj->args);
 	
 	if (file_exists($argObj->procFile) === true) {
@@ -82,9 +80,7 @@ try {
 	}
 
 } catch (\Exception $e) {
-	file_put_contents("/dev/shm/merlinFFF.txt", "Error: " .getmypid()." " .$e->getMessage() ."\n", FILE_APPEND);
 	if (file_exists($argObj->procFile) === true) {
 		file_put_contents($argObj->procFile, "exception:|MTM|:".base64_encode(serialize(array("message" => $e->getMessage(), "code" => $e->getCode(), "trace" => $e->getTraceAsString())))."\n", FILE_APPEND);
 	}
 }
-// file_put_contents("/dev/shm/merlinFFF.txt", "End: " .getmypid()."\n", FILE_APPEND);

@@ -24,6 +24,15 @@ abstract class Commands extends Base
 			return false;
 		}
 	}
+	public function getFinal()
+	{
+		$data	= $this->readData("final");
+		if ($data !== null) {
+			return $data;
+		} else {
+			return null;
+		}
+	}
 	public function getReturn($timeoutMs=-1, $throw=true)
 	{
 		if ($this->_isDone === false) {
@@ -80,7 +89,8 @@ abstract class Commands extends Base
 						throw new \Exception("Failed to decode reading type: ".$type);
 					}
 				} else {
-					throw new \Exception("Empty return reading type: ".$type);
+					//no data, but line does exist
+					return "";
 				}
 			}
 		}
