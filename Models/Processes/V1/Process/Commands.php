@@ -79,7 +79,9 @@ abstract class Commands extends Base
 				if ($line != "") {
 					$line	= base64_decode($line);
 					if ($line != "") {
-						$line	= unserialize($line);
+						if ($type !== "final") {
+							$line	= unserialize($line);
+						}
 						if ($line != "") {
 							return $line;
 						} else {

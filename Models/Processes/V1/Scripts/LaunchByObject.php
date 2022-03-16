@@ -72,11 +72,11 @@ try {
 	if (file_exists($argObj->procFile) === true) {
 		file_put_contents($argObj->procFile, "launching:|MTM|:".base64_encode(serialize(getmypid()))."\n", FILE_APPEND);
 	}
-	
+
 	$rData	= call_user_func_array(array($argObj->class, $argObj->method), $argObj->args);
 	
 	if (file_exists($argObj->procFile) === true) {
-		file_put_contents($argObj->procFile, "return:|MTM|:".base64_encode(serialize((object) array("time" => time, "data" => $rData)))."\n", FILE_APPEND);
+		file_put_contents($argObj->procFile, "return:|MTM|:".base64_encode(serialize((object) array("time" => time(), "data" => $rData)))."\n", FILE_APPEND);
 	}
 
 } catch (\Exception $e) {

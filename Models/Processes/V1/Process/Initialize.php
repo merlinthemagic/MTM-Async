@@ -61,12 +61,14 @@ abstract class Initialize extends Commands
 		
 		$strCmd1			= "(";
 		$strCmd1			.= " nohup sh -c '";
-		$strCmd1			.= " PROCOUT=$(";
+		$strCmd1			.= " { PROCOUT=$(";
 		$strCmd1			.= " ".$phpPath." -f \"".$scriptPath."\" ".$this->getGuid()." ".$procData;
-		$strCmd1			.= " );";
-		$strCmd1			.= " echo -en \"final:|MTM|:\" >> ".$this->_procFile." ; echo -en \$PROCOUT | base64 >> ".$this->_procFile;
+		$strCmd1			.= " 2>&1 1>&\$PROCOUT2); } {PROCOUT2}>&1;";
+		$strCmd1			.= " [ -f \"".$this->_procFile."\" ]";
+		$strCmd1			.= " && echo -en \"final:|MTM|:\" >> ".$this->_procFile;
+		$strCmd1			.= " && echo -en \$PROCOUT | base64 -w 0 >> ".$this->_procFile;
 		$strCmd1			.= " ' & ) > /dev/null 2>&1; echo -en \"MtmAsyncOL\"";
-
+		
 		$cmdLen				= strlen($strCmd1);
 		if ($cmdLen > $maxCmd) {
 			//put it in a file/sh_mem and tell the process to pick it up from there
