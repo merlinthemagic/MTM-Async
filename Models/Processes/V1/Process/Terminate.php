@@ -16,6 +16,12 @@ abstract class Terminate extends Initialize
 		
 			if ($this->getPersistence() === false) {
 				if (file_exists($this->_procFile) === true) {
+					try {
+						//get final before deleting
+						//final will contain any errors
+						$this->getFinal();
+					} catch (\Exception $e) {
+					}
 					unlink($this->_procFile);
 				}
 				if ($this->isRunning() === true) {

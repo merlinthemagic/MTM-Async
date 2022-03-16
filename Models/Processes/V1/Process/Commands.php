@@ -10,6 +10,7 @@ abstract class Commands extends Base
 	protected $_data=null;
 	protected $_ex=null;
 	protected $_error=null;
+	protected $_final=null;
 	
 	public function getPid()
 	{
@@ -26,12 +27,10 @@ abstract class Commands extends Base
 	}
 	public function getFinal()
 	{
-		$data	= $this->readData("final");
-		if ($data !== null) {
-			return $data;
-		} else {
-			return null;
+		if ($this->_final === null) {
+			$this->_final	= $this->readData("final");
 		}
+		return $this->_final;
 	}
 	public function getReturn($timeoutMs=-1, $throw=true)
 	{
