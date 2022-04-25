@@ -22,7 +22,7 @@
 	},
 	"autoload" : {
 		"files" : [
-			"./Enable.php"
+			"./Src/Enable.php"
 		]
 	},
 	"minimum-stability" : "dev"
