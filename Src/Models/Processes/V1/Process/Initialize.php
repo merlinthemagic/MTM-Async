@@ -1,5 +1,5 @@
 <?php
-//© 2022 Martin Peter Madsen
+//ï¿½ 2022 Martin Peter Madsen
 namespace MTM\Async\Models\Processes\V1\Process;
 
 abstract class Initialize extends Commands
@@ -60,14 +60,14 @@ abstract class Initialize extends Commands
 		file_put_contents($this->_procFile, "setup:|MTM|:".$procData."\n");
 		
 		$strCmd1			= "(";
-		$strCmd1			.= " nohup sh -c '";
+		$strCmd1			.= " nohup sh -c `";
 		$strCmd1			.= " { PROCOUT=$(";
 		$strCmd1			.= " ".$phpPath." -f \"".$scriptPath."\" ".$this->getGuid()." ".$procData;
 		$strCmd1			.= " 2>&1 1>&\$PROCOUT2); } {PROCOUT2}>&1;";
 		$strCmd1			.= " [ -f \"".$this->_procFile."\" ]";
 		$strCmd1			.= " && echo -en \"final:|MTM|:\" >> ".$this->_procFile;
 		$strCmd1			.= " && echo -en \$PROCOUT | base64 -w 0 >> ".$this->_procFile;
-		$strCmd1			.= " ' & ) > /dev/null 2>&1; echo -en \"MtmAsyncOL\"";
+		$strCmd1			.= " ` & ) > /dev/null 2>&1; echo -en \"MtmAsyncOL\"";
 		
 		$cmdLen				= strlen($strCmd1);
 		if ($cmdLen > $maxCmd) {
@@ -87,7 +87,7 @@ abstract class Initialize extends Commands
 			if ($data !== null) {
 				throw new \Exception($data["message"], intval($data["code"]));
 			} elseif ($tTime < time()) {
-				throw new \Exception("Process failed to return launch data");
+				throw new \Exception("Process failed to return launch data", 5555);
 			} else {
 				usleep(100000);
 			}

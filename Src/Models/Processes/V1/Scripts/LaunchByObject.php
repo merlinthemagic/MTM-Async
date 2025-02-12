@@ -1,11 +1,15 @@
 <?php
-//© 2022 Martin Peter Madsen
+//ï¿½ 2022 Martin Peter Madsen
 try {
+	
+// 	file_put_contents("/dev/shm/mtmErrors.txt", "Starting: ".getmypid()."\n", FILE_APPEND);
 	if (isset($argv[1]) === false) {
 		//we cannot report anything
+// 		file_put_contents("/dev/shm/mtmErrors.txt", "No arg 1\n", FILE_APPEND);
 		die("Missing process ID");
 	} elseif (isset($argv[2]) === false) {
 		//we cannot report anything
+// 		file_put_contents("/dev/shm/mtmErrors.txt", "No arg 2\n", FILE_APPEND);
 		die("Missing process data");
 	}
 
